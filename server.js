@@ -24,6 +24,11 @@ app.get("/user", (req, res) => {
 });
 app.post("/user", (req, res) => {
   const { name, age } = req.body;
+  if (!name || !age) {
+    return res
+      .status(400)
+      .json({ message: "Missing user data: 'name' and 'age' are required" });
+  }
   const newUser = {
     id: users.length + 1,
     name: name,
@@ -37,16 +42,16 @@ app.put("/user/:id", (req, res) => {
   const UserId = parseInt(req.params.id);
   const user = users.find((u) => u.id === UserId);
   if (!user) {
-    return res.status(404).json({ message: "Book not found" });
+    return res.status(404).json({ message: "User not found" });
   }
   user.name = name || user.name;
   user.age = age || user.age;
-  res.json({ message: "book updated", user });
+  res.json({ message: "User sucessfully updated", user });
 });
 app.delete("/user/:id", (req, res) => {
   const userId = parseInt(req.params.id);
   users = users.filter((user) => user.id !== userId);
-  res.json({ message: "User successfully deleted", users: users });
+  res.json({ message: "User successfully deleted" });
 });
 app.listen(port, () => {
   console.log(`Server is up and running on port ${port}`);
